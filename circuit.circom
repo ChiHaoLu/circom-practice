@@ -10,6 +10,7 @@ template operation(k){
     complete this function, and return the correct result to pass the assert in operation.
     */
 
+    /*
     for(var i = 2; i < k; i++){
         if(i % 2){
             // now element is value
@@ -36,18 +37,20 @@ template operation(k){
             }
         }
     }
+    */
 
     /* ----------------------------------------------- */
 
-    assert(result == ((arr[0] + 3) * 5 - 6) * 4);
+    // assert(result == ((arr[0] + 3) * 5 - 6) * 4);
     out <== result;
 }
 
 component main = operation(9);
 
-/*
+/* Wait for revising...
+
 1. Compile:
-$ circom circuit.circom -o circuit.json
+$ circom circuit.circom  --r1cs --wasm --sym --c -o circuit.json
 
 2. Genearate input file:
 $ node generate_circuit_input.js
