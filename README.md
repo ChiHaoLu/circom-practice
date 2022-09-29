@@ -193,14 +193,15 @@ file info                     Check info
     * 這一步我們會將程式邏輯（Circom Program）轉為多項式再轉為迴路
     * `-o circuit.json` 是一個 optional 的指令，可以指定輸出的檔名要叫做什麼
 * Generate proving key
-    * generate a .zkey file that will contain the proving and verification keys together with all phase 2 contributions. Execute the following command to start a new zkey:
     * `$ snarkjs plonk setup circuit.r1cs pot12_final.ptau circuit_final.zkey`
     * 得到迴路之後可以透過 sanrkjs 進行可信設定（trusted setup），trusted setup 會利用迴路還有隨機數產生兩把 Key
-    * 產生證明鑰匙（Proving Key），用於產生 ZKP
+    * 產出一個 `.zkey` 檔案，裡面已經包含了 proving 和 verification keys 兩種 key，而且是已經經過所有 phase 2 contributions 的結果
+        * 證明鑰匙（Proving Key），用於產生 ZKP
+        * 驗證鑰匙（Verification Key），用於驗證其他 Program 產生的 ZKP
     * 需要注意 plonk 也可以使用其他演算法例如 groth16，在打指令的時候不要打錯了
 * Export verification key
     * `$ snarkjs zkey export verificationkey circuit_final.zkey verification_key.json`
-    * 產生驗證鑰匙（Verification Key），用於驗證其他 Program 產生的 ZKP
+    * 這一步會特別產生驗證鑰匙（Verification Key）
 * Calculate Witness
     * `$ snarkjs wtns calculate circuit.wasm input.json witness.wtns`
     * Witness 為隱私資訊，是不想漏漏的資料
@@ -429,4 +430,3 @@ log(x==y);
 * [Sample](https://github.com/KimiWu123/Samples/tree/master/circom/TEMSample)
 * [MiMC Spong](https://github.com/KimiWu123/Samples/blob/master/circom/mimcSponge/mimcSponge.circom)
 * [SHA256](https://github.com/KimiWu123/Samples/tree/master/circom/sha256)
-
