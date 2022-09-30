@@ -28,14 +28,19 @@ Circom 的編譯器是使用 Rust 撰寫的，因此需要確認自己的電腦�
 $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 
-Circom 也支援使用 npm 或 yarn 等套件管理器下載：
+1. Circom 也支援使用 npm 或 yarn 等套件管理器下載：
 
 ```
 $ npm install -g circom
 $ npm install -g snarkjs
 ```
-
-> 另外也可以使用 Cargo 來下載 Circom，細節可見[此處](https://docs.circom.io/getting-started/installation/#installing-circom)
+2. 另外也可以使用 Cargo 來下載 Circom，細節可見[此處](https://docs.circom.io/getting-started/installation/#installing-circom)
+```
+$ git clone https://github.com/iden3/circom.git
+$ cd circom
+$ cargo build --release
+$ cargo install --path circom
+```
 
 請確認自己的電腦裡面同時有 Circom 以及 SnarkJS 的存在，可以用以下指令確定自己有下載成功：
 
@@ -192,6 +197,9 @@ file info                     Check info
     * `$ circom circuit.circom  --r1cs --wasm --sym --c -o circuit.json`
     * 這一步我們會將程式邏輯（Circom Program）轉為多項式再轉為迴路
     * `-o circuit.json` 是一個 optional 的指令，可以指定輸出的檔名要叫做什麼
+* Generate Input File
+    * `$ node generate_circuit_input.js`
+    * 這邊也可以使用其他方法，不一定要使用 js 產 `json`
 * Generate proving key
     * `$ snarkjs plonk setup circuit.r1cs pot12_final.ptau circuit_final.zkey`
     * 得到迴路之後可以透過 sanrkjs 進行可信設定（trusted setup），trusted setup 會利用迴路還有隨機數產生兩把 Key
@@ -226,17 +234,18 @@ file info                     Check info
     * 我們可以看見輸出的程式裡面包含兩個合約，`Pairing` 和 `Verifier`，我們只需要部署 `Verifier` 即可。
 * Generate callcode
     * `$ snarkjs zkey export soliditycalldata public.json proof.json`
-    * The Verifier has a view function called verifyProof that returns TRUE if and only if the proof and the inputs are valid. To facilitate the call, you can use snarkJS to generate the parameters of the call by typing:
-    * Cut and paste the output of the command to the parameters field of the verifyProof method in Remix. If everything works fine, this method should return TRUE. You can try to change just a single bit of the parameters, and you will see that the result is verifiable FALSE.
+    * Verifier Contract 裡面會有一個 view function 叫做 `verifyProof`，我們可以提交 proof 給這個函式並且得到回傳值，如果 proof 合法則為 `TRUE`，反之則為 `FALSE`。
+    * 我們可以藉由以上這個指令自動產出一個 callcode，直接複製就可以作為輸入函式的參數。
 
 ### Ceremony
+如果還沒準備過 Power of Tau 可以到 github 下載，或者透過以下指令下載：
 
-In more detail, the trusted setup consists of 2 parts:
+基本上 trusted setup 實際上有兩個步驟：
 1. The powers of tau, which is independent of the circuit.
     * `$ snarkjs powersoftau new bn128 12 pot12_0000.ptau -v`
     * `$ snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="First contribution" -v`
     * `$ snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v`
-3. The phase 2, which depends on the circuit.
+1. The phase 2, which depends on the circuit.
 
 ---
 
@@ -251,7 +260,6 @@ In more detail, the trusted setup consists of 2 parts:
     * [Circom verifier.sol](https://docs.circom.io/getting-started/proving-circuits/#verifying-a-proof)
 * [zkREPL an online playground for zk circuits](https://zkrepl.dev/)
 * [0xPARC circom ECDSA circuit](https://github.com/0xPARC/circom-ecdsa)
-
 
 #### SnarkJS
 - [iden3/snarkjs](https://github.com/iden3/snarkjs)
@@ -292,7 +300,7 @@ component main = example_MiMC();
 > var dbl[16][2] = base;
 > var y[5] = someFunction(n);
 > ```
-* `signal`: 代表此變數要轉換成迴路，有以下屬性：
+* `signal`: 代表此變數或陣列要轉換成迴路，有以下屬性：
     * `private`: 代表隱私資訊，如果沒有指定就會是公開資訊
     * `input`: input
     * `output`: output
@@ -399,6 +407,8 @@ log(135);
 log(c.b);
 log(x==y);
 ```
+
+在 calculate witness 時會產出 `log()` 的結果。
 
 ### Compiler 
 
