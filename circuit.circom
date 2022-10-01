@@ -42,7 +42,13 @@ template operation(k){
 
     /* ----------------------------------------------- */
 
-    var temp = (((arr[0] + 3) * 5) -6) * 4;
+    // var temp = (((arr[0] + 3) * 5) -6) * 4; 
+
+    signal temp <== arr[0];
+    temp <== temp + 3;
+    temp <== temp * 5;
+    temp <== temp - 6;
+    temp <== temp * 4;
 
     log(result - temp);
     result === temp;
