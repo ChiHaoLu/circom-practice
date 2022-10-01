@@ -8,3 +8,5 @@
 8,9,0,main.arr[7]
 9,10,0,main.arr[8]
 10,1,0,main.out
+11,2,0,main.result
+12,3,0,main.temp_op

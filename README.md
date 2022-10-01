@@ -362,6 +362,8 @@ function func ( param_1, ... , param_n ) {
 * Bitwise: `&, |, ~, ^, <<, >>`
 * Operator with assignment: `+= , -= , *= , /= , **=, \=, %= , ^= , |= , &= , >>=, <<=`
 
+> `-=` 有時候會報錯我還不確定原因。
+
 #### Control flow
 
 ```circom
@@ -421,6 +423,24 @@ log(x==y);
 * **Error**
     * The compiler throws an error when there is part of the code that is not allowed.
 
+### Circuit Hint
+
+例如 assert(a == b) vs. a === b
+還有 signal input a vs. var a
+這種差別
+
+assert 只是執行時的檢查條件（讓 prover 知道），電路裡並沒有真的限制式。真的違反這個限制式時，例如 witness a!=b 時，Verifier 是檢查不出來的。 但  === 就是電路裡真的有限制式，本身也有 alert 的效果
+
+一般使用時機是，假設你的電路支援 10 層的 merkle tree ，你可能會 input 一個變數叫層數 n 。迴路不用真的檢查 n < 10 ，但是有 assert 檢查才不會讓 prover witness 一個不合格的 n ，提早把問題反映出來
+
+signal input a vs. var a
+signal 是proving time 才知道的數字。但 var compile time 就知道。
+例如你有一個迴圈 i 要做十次，這個 i 不需要等到 proving time 才知道，用 var 就好
+
+對的，電路的限制條件要很小心。錯誤的條件可以讓壞人製造不合理的 proof 。例如 tornado cash 你有些條件沒檢查好，壞人就可以憑空領錢
+
+每一個 <== 和 === 都要很小心問：為什麼我需要這條檢查 ，如果沒這個檢查，壞人可以怎樣偷錢
+
 ---
 
 ## Exercise
@@ -435,8 +455,7 @@ log(x==y);
 * [動手實做零知識 — circom](https://medium.com/cryptocow/%E5%8B%95%E6%89%8B%E5%AF%A6%E5%81%9A%E9%9B%B6%E7%9F%A5%E8%AD%98-circom-d7ac1fa8bbd3)
 * [Implementing Zero Knowledge Lottery’s Circom circuits PART 1 / 2](https://medium.com/@killari/implementing-zero-knowledge-lotterys-circom-circuits-part-1-2-16910b3732a2)
 
-
-#### Sample
+### Sample
 * [Sample](https://github.com/KimiWu123/Samples/tree/master/circom/TEMSample)
 * [MiMC Spong](https://github.com/KimiWu123/Samples/blob/master/circom/mimcSponge/mimcSponge.circom)
 * [SHA256](https://github.com/KimiWu123/Samples/tree/master/circom/sha256)
