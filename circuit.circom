@@ -41,7 +41,6 @@ template operation(k){
     //     }
     // }
    
-
     // log(result - temp);
     // result === temp;
 
@@ -55,6 +54,7 @@ template operation(k){
     result[4] <-- result[3] * arr[8];
 
     log(result[4] - temp);
+    assert(result[4] - temp);
     result[4] === temp;
     
     out <== result[4];

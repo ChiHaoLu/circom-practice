@@ -239,8 +239,9 @@ component main = GetMerkleRoot(2);
 
 > `-=` 有時候會報錯我還不確定原因。
 
-#### Function & Control flow
+#### Function, Control flow, Debugging
 
+基本的流程控制還有函式操作 Circom 都有支援（望向隔壁棚的 Cairo...），不過需要注意的是 `function` 只可以用來算數值運算或陣列值等敘述，不可以在裡面有電路限制。
 ```circom
 // function
 function func ( param_1, ... , param_n ) {
@@ -269,25 +270,7 @@ do{
 } while(i<n)
 ```
 
-* `function` can compute numeric values, arrays of values or expressions, but they can not generate constraints
-
-#### Others
-
-```
-// Assert
-template Translate(n) {
-	assert(n>0);
-	assert(n<=254);
-	…
-}
-
-// Debugging
-log(135);
-log(c.b);
-log(x==y);
-```
-
-在 calculate witness 時會產出 `log()` 的結果。
+此外也有一些限制可以幫助開發，例如 `assert(<boolean_statement>)` 以及 `log(<print_statement>)`，在 calculate witness 時會產出 `log()` 的結果，如果是要印出跟 `signal` 有關的訊息會發現 compiler 的時候是不會知道值是多少的，因為 `signal` 必須等到有 `input` 的 witness 階段才知道值。
 
 ### Circuit Hint
 
@@ -307,7 +290,74 @@ log(x==y);
 
 ## Exercise
 
+大家可以來練習看看我自己想的一個小小練習題！
 
+```javascript
+const fs = require("fs");
+
+var address = 1028681454274062171917806653030472759697697899756 // put your address here
+var ADD = 147;
+var SUB = 148;
+var MUL = 149;
+
+var arr = [
+    address,
+    ADD, 3,
+    MUL, 5,
+    SUB, 6,
+    MUL, 4
+];
+
+const inputs = {
+    "arr": arr,
+}
+
+fs.writeFileSync(
+    "./input.json",
+    JSON.stringify(inputs),
+    "utf-8"
+);
+```
+
+
+```circom
+template operation(k){
+    
+    signal input arr[k];
+    signal result[k];
+    signal output out;
+    var temp = (((arr[0] + 3) * 5) -6) * 4; 
+    
+    
+    /*
+    TODO: 
+    complete this function, and return the correct result to pass the assert in operation.
+    */
+
+    result[0] <-- arr[0];
+    result[1] <-- result[0] + arr[2];
+    result[2] <-- result[1] * arr[4];
+    result[3] <-- result[2] - arr[6];
+    result[4] <-- result[3] * arr[8];
+    
+    /* ----------------------------------------------- */
+
+    log(result[4] - temp);
+    assert(result[4] - temp);
+    result[4] === temp;
+    
+    out <== result[4];
+}
+
+component main = operation(9);
+```
+
+```
+address prover = address(uint160(pubSignals[1]));
+address student = 0xB42faBF7BCAE8bc5E368716B568a6f8Fdf3F84ec;
+require(student == prover);
+// require(msg.sender == prover);
+```
 
 ---
 

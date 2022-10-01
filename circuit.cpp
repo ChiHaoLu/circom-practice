@@ -35,7 +35,9 @@ void operation_d6c1bd8047f9cc9b(Circom_CalcWit *ctx, int __cIdx) {
     FrElement _sigValue_10[1];
     FrElement _tmp_8[1];
     FrElement _sigValue_11[1];
+    FrElement _tmp_9[1];
     FrElement _sigValue_12[1];
+    FrElement _sigValue_13[1];
     int _arr_sigIdx_;
     int _offset_1;
     int _offset_4;
@@ -56,6 +58,7 @@ void operation_d6c1bd8047f9cc9b(Circom_CalcWit *ctx, int __cIdx) {
     int _offset_18;
     int _offset_20;
     int _offset_22;
+    int _offset_24;
     int _out_sigIdx_;
     Circom_Sizes _sigSizes_arr;
     Circom_Sizes _sigSizes_result;
@@ -117,14 +120,19 @@ void operation_d6c1bd8047f9cc9b(Circom_CalcWit *ctx, int __cIdx) {
     ctx->multiGetSignal(__cIdx, __cIdx, _offset_18, _sigValue_10, 1);
     Fr_sub(_tmp_8, _sigValue_10, temp);
     ctx->log(_tmp_8);
-    /* result[4] === temp */
+    /* assert(result[4] - temp) */
     _offset_20 = _result_sigIdx_ + 4*_sigSizes_result[1];
     ctx->multiGetSignal(__cIdx, __cIdx, _offset_20, _sigValue_11, 1);
-    ctx->checkConstraint(__cIdx, _sigValue_11, temp, "/Users/chihaolu/Desktop/circom/circuit.circom:58:4");
-    /* out <== result[4] */
+    Fr_sub(_tmp_9, _sigValue_11, temp);
+    ctx->checkAssert(__cIdx, _tmp_9, "/Users/chihaolu/Desktop/circom/circuit.circom:57:4");
+    /* result[4] === temp */
     _offset_22 = _result_sigIdx_ + 4*_sigSizes_result[1];
     ctx->multiGetSignal(__cIdx, __cIdx, _offset_22, _sigValue_12, 1);
-    ctx->setSignal(__cIdx, __cIdx, _out_sigIdx_, _sigValue_12);
+    ctx->checkConstraint(__cIdx, _sigValue_12, temp, "/Users/chihaolu/Desktop/circom/circuit.circom:58:4");
+    /* out <== result[4] */
+    _offset_24 = _result_sigIdx_ + 4*_sigSizes_result[1];
+    ctx->multiGetSignal(__cIdx, __cIdx, _offset_24, _sigValue_13, 1);
+    ctx->setSignal(__cIdx, __cIdx, _out_sigIdx_, _sigValue_13);
     ctx->finished(__cIdx);
 }
 // Function Table
