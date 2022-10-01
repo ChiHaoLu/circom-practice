@@ -138,10 +138,10 @@ powersoftau new               Starts a powers of tau ceremony
     * 產生一個驗證合約，只要「產生證明者」提交他的 proof 到合約中的驗證函式，合約就可以判斷此 ZKP 是否合法
     * 我們也可以繼承這個合約並且加上自己想要的系統設計，成為一個可以驗證零知識證明的 Dapps！
     * 我們可以看見輸出的程式裡面包含兩個合約，`Pairing` 和 `Verifier`，我們只需要部署 `Verifier` 即可。
-* Generate callcode
+* Generate calldata
     * `$ snarkjs zkey export soliditycalldata public.json proof.json`
     * Verifier Contract 裡面會有一個 view function 叫做 `verifyProof`，我們可以提交 proof 給這個函式並且得到回傳值，如果 proof 合法則為 `TRUE`，反之則為 `FALSE`。
-    * 我們可以藉由以上這個指令自動產出一個 callcode，直接複製就可以作為輸入函式的參數。
+    * 我們可以藉由以上這個指令自動產出一個 calldata，直接複製就可以作為輸入函式的參數。
 
 ### Ceremony
 如果還沒準備過 Power of Tau 可以到 github 下載，或者透過以下指令下載：
