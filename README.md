@@ -174,73 +174,48 @@ powersoftau new               Starts a powers of tau ceremony
 ### Example
 
 ```circom=
-include "../circomlib/circuits/mimcsponge.circom";
+include "../circomlib/circuits/mimc.circom";
 
-template example_MiMC() {
-   var numInput = 2; // length of vector_inputs[]
-   var rounds = 220;
-   var numOutput = 1;
- 
-   signal private input ins[numInput]; //[3, 5]
-   signal output outs[numOutput];
+template GetMerkleRoot(k){
+// k is depth of tree
 
-   component mimc = MiMCSponge(numInput, rounds, numOutput);
-   for(var i=0; i<numInput; i++) {
-       mimc.ins[i] <== ins[i];
-        
-   }
-   mimc.k <== 0;
+    signal input leaf;
+    signal input paths2_root[k];
+    signal input paths2_root_pos[k];
 
-   for(var i=0; i<numOutput; i++) {
-       outs[i] <==  mimc.outs[i];
-   }
+    signal output out;
+
+    // hash of first two entries in tx Merkle proof
+    component merkle_root[k];
+    merkle_root[0] = MultiMiMC7(2,91);
+    merkle_root[0].in[0] <== leaf - paths2_root_pos[0]* (leaf - paths2_root[0]);
+    merkle_root[0].in[1] <== paths2_root[0] - paths2_root_pos[0]* (paths2_root[0] - leaf);
+
+    // hash of all other entries in tx Merkle proof
+    for (var v = 1; v < k; v++){
+        merkle_root[v] = MultiMiMC7(2,91);
+        merkle_root[v].in[0] <== paths2_root[v] - paths2_root_pos[v]* (paths2_root[v] - merkle_root[v-1].out);
+        merkle_root[v].in[1] <== //can you figure this one out?
+    }
+
+    // output computed Merkle root
+    out <== merkle_root[k-1].out;
+
 }
-component main = example_MiMC();
+
+component main = GetMerkleRoot(2);
 ```
 * `include`: include modules
-* `template`: function declaration
-* `var`: variable declaration
-> ```circom
-> var x[3] = [2,8,4];
-> var z[n+1];
-> var dbl[16][2] = base;
-> var y[5] = someFunction(n);
-> ```
-* `signal`: 代表此變數或陣列要轉換成迴路，有以下屬性：
+* `template`: function declaration（會在電路）
+* `var`: variable declaration（不會在電路）
+* `signal`: 代表此變數或陣列要轉換成電路中，有以下屬性：
     * `private`: 代表隱私資訊，如果沒有指定就會是公開資訊
     * `input`: input
     * `output`: output
 * `component`: 使用情境是在於承接函數、對函數內的 signal 變數作操作，可以想作是一個物件，而 signal 變數則為 class 的公開成員變數。
 * `main`: main
 
-```circom=
-template Internal() {
-   signal input in[2];
-   signal output out;
-   out <== in[0]*in[1];
-}
-
-template Main() {
-   signal input in[2];
-   signal output out;
-   component c = Internal ();
-   c.in[0] <== in[0];
-   c.out ==> out;  // c.in[1] is not assigned yet
-   c.in[1] <== in[1];  // this line should be placed before calling c.out
-}
-
-component main = Main();
-```
-
 > At compilation time, the content of a signal is always considered unknown.
-
-```
-function func ( param_1, ... , param_n ) {
-	.....
-	return x;
-}
-```
-* `function` can compute numeric values, arrays of values or expressions, but they can not generate constraints
 
 ### Syntax
 
@@ -248,15 +223,9 @@ function func ( param_1, ... , param_n ) {
 
 #### Assign
 
-* `<==  ==> `
-    * assign values to signals AND define a constraint
-    * 給予 signal 變數值，並且建立一個迴路的約束。
-* `<--  --> `
-    * assign values to signals
-    * 給予 signal 變數值。
-* `===`
-    * define a constraint
-    * 建立一個迴路的約束。
+* `<==  ==> `: 給予 signal 變數值，並且建立一個迴路的約束。
+* `<--  --> `: 給予 signal 變數值。
+* `===`: 建立一個迴路的約束。
 * 因此 `<== : <-- + ===`
 
 
@@ -270,35 +239,37 @@ function func ( param_1, ... , param_n ) {
 
 > `-=` 有時候會報錯我還不確定原因。
 
-#### Control flow
+#### Function & Control flow
 
 ```circom
+// function
+function func ( param_1, ... , param_n ) {
+	.....
+	return x;
+}
+
 // if-else
 if (x >= 0) {
-	x = y + 1;
-	y += 1;
+	// ...
 } else {
-	x = c.b;
+     // ...
 }
 
 // for loop
 for (var i = 0; i<n; i++) {
-	lc1 += in[i] * e2;
-	e2 = e2 + e2;
+	// ...
 }
 
 // do-while loop
 while(i<n) {
-	lc1 += in[i] * e2;
-	e2 = e2 + e2;
-	i = i+1;
+	// ...
 }
 do{
-	lc1 += in[i] * e2;
-	e2 = e2 + e2;
-	i = i+1;
+	// ...
 } while(i<n)
 ```
+
+* `function` can compute numeric values, arrays of values or expressions, but they can not generate constraints
 
 #### Others
 
@@ -349,4 +320,4 @@ log(x==y);
 * [therealyingtong/roll_up_circom_tutorial](https://github.com/therealyingtong/roll_up_circom_tutorial)
 * [動手實做零知識 — circom](https://medium.com/cryptocow/%E5%8B%95%E6%89%8B%E5%AF%A6%E5%81%9A%E9%9B%B6%E7%9F%A5%E8%AD%98-circom-d7ac1fa8bbd3)
 * [Implementing Zero Knowledge Lottery’s Circom circuits PART 1 / 2](https://medium.com/@killari/implementing-zero-knowledge-lotterys-circom-circuits-part-1-2-16910b3732a2)
-* [Sample](https://github.com/KimiWu123/Samples/tree/master/circom/TEMSample)
+* [KimiWu123/Sample](https://github.com/KimiWu123/Samples)
