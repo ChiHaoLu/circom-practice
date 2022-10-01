@@ -4,7 +4,6 @@ template operation(k){
     signal output out;
     var temp = (((arr[0] + 3) * 5) -6) * 4; 
     
-
     /*
     TODO: 
     complete this function, and return the correct result to pass the assert in operation.
@@ -48,12 +47,12 @@ template operation(k){
 
     // /* ----------------------------------------------- */
 
-    signal result[9];
+    signal result[k];
     result[0] <-- arr[0];
-    result[1] <-- result[0] + 3;
-    result[2] <-- result[1] * 5;
-    result[3] <-- result[2] - 6;
-    result[4] <-- result[3] * 4;
+    result[1] <-- result[0] + arr[2];
+    result[2] <-- result[1] * arr[4];
+    result[3] <-- result[2] - arr[6];
+    result[4] <-- result[3] * arr[8];
 
     log(result[4] - temp);
     result[4] === temp;
