@@ -18,9 +18,7 @@
 
 ![](https://i.imgur.com/UCTLITt.png)
 
-Circom Compiler 和它整個生態系的工具可以幫助人們將原本撰寫零知識證明程式時，需要處理多項式與迴路（Circuits）的整個過程包起來，我們就只需要處理程式邏輯就好。
-
-還有其他用來撰寫零知識證明系統的程式語言，例如 Cairo、Zinc、ZoKrates（包含 SNARK / STARK 證明系統）。
+Circom Compiler 和它整個生態系的工具可以幫助人們將原本撰寫零知識證明程式時，需要處理多項式與迴路（Circuits）的整個過程包起來，我們就只需要處理程式邏輯就好。還有其他用來撰寫零知識證明系統的程式語言，例如 Cairo、Zinc、ZoKrates（以上包含 SNARK / STARK 證明系統）。
 
 ### Download Packages
 Circom 的編譯器是使用 Rust 撰寫的，因此需要確認自己的電腦裡面有 Rust，MacOS & Linux 可以在終端機直接使用以下指令：
@@ -44,7 +42,7 @@ $ cargo install --path circom
 
 請確認自己的電腦裡面同時有 Circom 以及 SnarkJS 的存在，可以用以下指令確定自己有下載成功：
 
-:::spoiler 1. Circom
+1. Circom
 ```
 $ circom --help
 >
@@ -54,30 +52,11 @@ $ circom --help
 
    USAGE:
       circom [FLAGS] [OPTIONS] [input]
-
-   FLAGS:
-      -h, --help       Prints help information
-         --inspect    Does an additional check over the constraints produced
-         --O0         No simplification is applied
-      -c, --c          Compiles the circuit to c
-         --json       outputs the constraints in json format
-         --r1cs       outputs the constraints in r1cs format
-         --sym        outputs witness in sym format
-         --wasm       Compiles the circuit to wasm
-         --wat        Compiles the circuit to wat
-         --O1         Only applies var to var and var to constant simplification
-      -V, --version    Prints version information
-
-   OPTIONS:
-         --O2 <full_simplification>    Full constraint simplification [default: full]
-      -o, --output <output>             Path to the directory where the output will be written [default: .]
-
-   ARGS:
-      <input>    Path to a circuit with a main component [default: ./circuit.circom]
+   
+   ...      
 ```
-:::
 
-:::spoiler 2. SnarkJS
+2. SnarkJS
 ```
 $ snarkjs
 >
@@ -98,79 +77,9 @@ Full Command                  Description
 ============                  =================
 powersoftau new               Starts a powers of tau ceremony
      Usage:  snarkjs ptn <curve> <power> [powersoftau_0000.ptau]
-powersoftau contribute        creates a ptau file with a new contribution
-     Usage:  snarkjs ptc <powersoftau.ptau> <new_powersoftau.ptau>
-powersoftau export challenge  Creates a challenge
-     Usage:  snarkjs ptec <powersoftau_0000.ptau> [challenge]
-powersoftau challenge contributeContribute to a challenge
-     Usage:  snarkjs ptcc <curve> <challenge> [response]
-powersoftau import response   import a response to a ptau file
-     Usage:  snarkjs ptir <powersoftau_old.ptau> <response> <<powersoftau_new.ptau>
-powersoftau beacon            adds a beacon
-     Usage:  snarkjs ptb <old_powersoftau.ptau> <new_powersoftau.ptau> <beaconHash(Hex)> <numIterationsExp>
-powersoftau prepare phase2    Prepares phase 2. 
-     Usage:  snarkjs pt2 <powersoftau.ptau> <new_powersoftau.ptau>
-powersoftau convert           Convert ptau
-     Usage:  snarkjs ptcv <old_powersoftau.ptau> <new_powersoftau.ptau>
-powersoftau truncate          Generate diferent powers of tau with smoller sizes 
-     Usage:  snarkjs ptt <powersoftau.ptau>
-powersoftau verify            verifies a powers of tau file
-     Usage:  snarkjs ptv <powersoftau.ptau>
-powersoftau export json       Exports a power of tau file to a JSON
-     Usage:  snarkjs ptej <powersoftau_0000.ptau> <powersoftau_0000.json>
-r1cs info                     Print statistiscs of a circuit
-     Usage:  snarkjs ri [circuit.r1cs]
-r1cs print                    Print the constraints of a circuit
-     Usage:  snarkjs rp [circuit.r1cs] [circuit.sym]
-r1cs export json              Export r1cs to JSON file
-     Usage:  snarkjs rej [circuit.r1cs] [circuit.json]
-wtns calculate                Caclculate specific witness of a circuit given an input
-     Usage:  snarkjs wc [circuit.wasm] [input.json] [witness.wtns]
-wtns debug                    Calculate the witness with debug info.
-     Usage:  snarkjs wd [circuit.wasm] [input.json] [witness.wtns] [circuit.sym]
-wtns export json              Calculate the witness with debug info.
-     Usage:  snarkjs wej [witness.wtns] [witnes.json]
-zkey contribute               creates a zkey file with a new contribution
-     Usage:  snarkjs zkc <circuit_old.zkey> <circuit_new.zkey>
-zkey export bellman           Export a zKey to a MPCParameters file compatible with kobi/phase2 (Bellman)
-     Usage:  snarkjs zkeb <circuit_xxxx.zkey> [circuit.mpcparams]
-zkey bellman contribute       contributes to a challenge file in bellman format
-     Usage:  snarkjs zkbc <curve> <circuit.mpcparams> <circuit_response.mpcparams>
-zkey import bellman           Export a zKey to a MPCParameters file compatible with kobi/phase2 (Bellman) 
-     Usage:  snarkjs zkib <circuit_old.zkey> <circuit.mpcparams> <circuit_new.zkey>
-zkey beacon                   adds a beacon
-     Usage:  snarkjs zkb <circuit_old.zkey> <circuit_new.zkey> <beaconHash(Hex)> <numIterationsExp>
-zkey verify r1cs              Verify zkey file contributions and verify that matches with the original circuit.r1cs and ptau
-     Usage:  snarkjs zkv [circuit.r1cs] [powersoftau.ptau] [circuit_final.zkey]
-zkey verify init              Verify zkey file contributions and verify that matches with the original circuit.r1cs and ptau
-     Usage:  snarkjs zkvi [circuit_0000.zkey] [powersoftau.ptau] [circuit_final.zkey]
-zkey export verificationkey   Exports a verification key
-     Usage:  snarkjs zkev [circuit_final.zkey] [verification_key.json]
-zkey export json              Exports a circuit key to a JSON file
-     Usage:  snarkjs zkej [circuit_final.zkey] [circuit_final.zkey.json]
-zkey export solidityverifier  Creates a verifier in solidity
-     Usage:  snarkjs zkesv [circuit_final.zkey] [verifier.sol]
-zkey export soliditycalldata  Generates call parameters ready to be called.
-     Usage:  snarkjs zkesc [public.json] [proof.json]
-groth16 setup                 Creates an initial groth16 pkey file with zero contributions
-     Usage:  snarkjs g16s [circuit.r1cs] [powersoftau.ptau] [circuit_0000.zkey]
-groth16 prove                 Generates a zk Proof from witness
-     Usage:  snarkjs g16p [circuit_final.zkey] [witness.wtns] [proof.json] [public.json]
-groth16 fullprove             Generates a zk Proof from input
-     Usage:  snarkjs g16f [input.json] [circuit_final.wasm] [circuit_final.zkey] [proof.json] [public.json]
-groth16 verify                Verify a zk Proof
-     Usage:  snarkjs g16v [verification_key.json] [public.json] [proof.json]
-plonk setup                   Creates an initial PLONK pkey 
-     Usage:  snarkjs pks [circuit.r1cs] [powersoftau.ptau] [circuit.zkey]
-plonk prove                   Generates a PLONK Proof from witness
-     Usage:  snarkjs pkp [circuit.zkey] [witness.wtns] [proof.json] [public.json]
-plonk fullprove               Generates a PLONK Proof from input
-     Usage:  snarkjs pkf [input.json] [circuit.wasm] [circuit.zkey] [proof.json] [public.json]
-plonk verify                  Verify a PLONK Proof
-     Usage:  snarkjs pkv [verification_key.json] [public.json] [proof.json]
-file info                     Check info
+     
+     ...
 ```
-:::
 
 ### Overview
 
@@ -184,9 +93,6 @@ file info                     Check info
     * `snarkjs calculatewitness` → witness.json
 5. **Generate proof *(Proof System)***:
     * `snarkjs proof` → proof.json
-
-
-![](https://i.imgur.com/69zNBoe.png)
 
 #### Command Steps
 
@@ -412,17 +318,6 @@ log(x==y);
 
 在 calculate witness 時會產出 `log()` 的結果。
 
-### Compiler 
-
-#### Message
-
-* **Hint**
-    * The compiler throws a hint when there is part of the code that is allowed but uncommon, and hence, it is better to check if that part of the code was written that way on purpose.
-* **Warning**
-    * The compiler throws a warning when there is part of the code that is allowed but it should not happen in general.
-* **Error**
-    * The compiler throws an error when there is part of the code that is not allowed.
-
 ### Circuit Hint
 
 一開始在撰寫電路的時候不太清楚怎麼樣的限制或者變數要放在電路裡面，例如 `assert(a == b)` vs. `a === b` 或者 `signal input a` vs. `var a` 這些差別。
@@ -445,13 +340,13 @@ log(x==y);
 
 ---
 
-## Reference
+## Closing
+
+感謝 C.C. Liang, Vivian, KiMi 老師們的細心指導！
+
+### Reference
 
 * [therealyingtong/roll_up_circom_tutorial](https://github.com/therealyingtong/roll_up_circom_tutorial)
 * [動手實做零知識 — circom](https://medium.com/cryptocow/%E5%8B%95%E6%89%8B%E5%AF%A6%E5%81%9A%E9%9B%B6%E7%9F%A5%E8%AD%98-circom-d7ac1fa8bbd3)
 * [Implementing Zero Knowledge Lottery’s Circom circuits PART 1 / 2](https://medium.com/@killari/implementing-zero-knowledge-lotterys-circom-circuits-part-1-2-16910b3732a2)
-
-### Sample
 * [Sample](https://github.com/KimiWu123/Samples/tree/master/circom/TEMSample)
-* [MiMC Spong](https://github.com/KimiWu123/Samples/blob/master/circom/mimcSponge/mimcSponge.circom)
-* [SHA256](https://github.com/KimiWu123/Samples/tree/master/circom/sha256)
