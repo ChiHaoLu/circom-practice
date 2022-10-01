@@ -165,7 +165,7 @@ powersoftau new               Starts a powers of tau ceremony
     * [Syntax Documantation](https://docs.circom.io/circom-language/signals/)
     * [Circom verifier.sol](https://docs.circom.io/getting-started/proving-circuits/#verifying-a-proof)
 * [zkREPL an online playground for zk circuits](https://zkrepl.dev/)
-* [0xPARC circom ECDSA circuit](https://github.com/0xPARC/circom-ecdsa)
+
 
 #### SnarkJS
 - [iden3/snarkjs](https://github.com/iden3/snarkjs)
@@ -367,7 +367,11 @@ require(student == prover);
 
 ### Reference
 
+* [0xPARC circom ECDSA circuit](https://github.com/0xPARC/circom-ecdsa)
+* [privacy-scaling-explorations/zk-kit](https://github.com/privacy-scaling-explorations/zk-kit)
 * [therealyingtong/roll_up_circom_tutorial](https://github.com/therealyingtong/roll_up_circom_tutorial)
 * [動手實做零知識 — circom](https://medium.com/cryptocow/%E5%8B%95%E6%89%8B%E5%AF%A6%E5%81%9A%E9%9B%B6%E7%9F%A5%E8%AD%98-circom-d7ac1fa8bbd3)
 * [Implementing Zero Knowledge Lottery’s Circom circuits PART 1 / 2](https://medium.com/@killari/implementing-zero-knowledge-lotterys-circom-circuits-part-1-2-16910b3732a2)
 * [KimiWu123/Sample](https://github.com/KimiWu123/Samples)
+* [fluree/example-zero-knowledge](https://github.com/fluree/example-zero-knowledge)
+* [Zero-Knowledge Soul-Bound-Token (ZK SBT)](https://github.com/enricobottazzi/ZK-SBT)
