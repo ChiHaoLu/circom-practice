@@ -425,21 +425,17 @@ log(x==y);
 
 ### Circuit Hint
 
-例如 assert(a == b) vs. a === b
-還有 signal input a vs. var a
-這種差別
+一開始在撰寫電路的時候不太清楚怎麼樣的限制或者變數要放在電路裡面，例如 `assert(a == b)` vs. `a === b` 或者 `signal input a` vs. `var a` 這些差別。
 
-assert 只是執行時的檢查條件（讓 prover 知道），電路裡並沒有真的限制式。真的違反這個限制式時，例如 witness a!=b 時，Verifier 是檢查不出來的。 但  === 就是電路裡真的有限制式，本身也有 alert 的效果
+請教 c.c. 老師之後得知，將敘述放在電路與否其實與 prover 和 verifier 的角度有非常大的關係，例如 `assert` 只是執行時的檢查條件（讓 prover 知道），電路裡並沒有真的限制式。真的違反這個限制式時，例如 witness a!=b 時，Verifier 是檢查不出來的。 但 `===` 就是電路裡真的有限制式，本身也有 alert 的效果，如果 witness 裡面沒有正確的限制， Verifier 是會知道的。
 
 一般使用時機是，假設你的電路支援 10 層的 merkle tree ，你可能會 input 一個變數叫層數 n 。迴路不用真的檢查 n < 10 ，但是有 assert 檢查才不會讓 prover witness 一個不合格的 n ，提早把問題反映出來
 
-signal input a vs. var a
-signal 是proving time 才知道的數字。但 var compile time 就知道。
-例如你有一個迴圈 i 要做十次，這個 i 不需要等到 proving time 才知道，用 var 就好
+而 `signal input a` vs. `var a` 的例子更好理解，`signal` 通常是 proving time 才知道的數字，而 `var` 是 compile time 就會知道的數字。所以在迴圈中的 loop counter 或者一些用來做運算的 temp，這些不需要等到 proving time 才知道的變數，就可以直接用 `var` 就好。
 
-對的，電路的限制條件要很小心。錯誤的條件可以讓壞人製造不合理的 proof 。例如 tornado cash 你有些條件沒檢查好，壞人就可以憑空領錢
+最後老師還提醒電路的限制條件要很小心。錯誤的條件可以讓壞人製造不合理的 proof 。例如 tornado cash 有些條件沒檢查好，壞人就可以憑空領錢。在每一個 <== 和 === 都要很小心問：為什麼我需要這條檢查，如果沒這個檢查，壞人可以怎樣偷錢。
 
-每一個 <== 和 === 都要很小心問：為什麼我需要這條檢查 ，如果沒這個檢查，壞人可以怎樣偷錢
+寫出一個好的零知識證明程式真的很難啊...
 
 ---
 
