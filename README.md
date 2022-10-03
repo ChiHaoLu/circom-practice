@@ -406,3 +406,4 @@ require(msg.sender == prover);
 * [KimiWu123/Sample](https://github.com/KimiWu123/Samples)
 * [fluree/example-zero-knowledge](https://github.com/fluree/example-zero-knowledge)
 * [Zero-Knowledge Soul-Bound-Token (ZK SBT)](https://github.com/enricobottazzi/ZK-SBT)
+* [Unirep/packages/circuits](https://github.com/Unirep/Unirep/tree/fad8e7cd8efaf7b284b7d4fcd0d9999875179a45/packages/circuits)
