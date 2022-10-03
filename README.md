@@ -153,6 +153,23 @@ powersoftau new               Starts a powers of tau ceremony
 1. The phase 2, which depends on the circuit.
     * `$ snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v`
 
+關於兩階段的 Ceremony：我看官網的兩階段 ceremony 是用 setup `0000.zkey` 接一個 contribute `0000.zkey` `0001.zkey`，之後才是 export verificationkey `0001.zkey`
+
+我自己用 plonk 跳過 contribute 這個指令直接使用 setup `0000.zkey` 接著做 export verificayionkey `0000.zkey`，平常時候是可以完整做完全部的，包含後面的：Calculate witness、Generate proof、Verify、Verifier 等都可以通過
+
+會需要兩階段的原因「貌似」是因為 zkey 似乎是可以被攻擊的，所以會需要 run trusted setup ceremony 去 contribute 這個 zkey。
+
+有時候 prove 的時候出現一個錯誤是：
+```
+ERROR] snarkJS: Error: T Polynomial is not divisible
+    at round3 (/usr/local/lib/node_modules/snarkjs/build/cli.cjs:7010:27)
+    at async plonk16Prove (/usr/local/lib/node_modules/snarkjs/build/cli.cjs:6595:5)
+    at async Object.plonkProve [as action] (/usr/local/lib/node_modules/snarkjs/build/cli.cjs:9028:36)
+    at async clProcessor (/usr/local/lib/node_modules/snarkjs/build/cli.cjs:454:27)
+```
+
+我看這個 error 好像是 zkey 次數不夠會發生 https://github.com/iden3/snarkjs/blob/master/src/plonk_prove.js#L504，我猜測是因為跳過了這個兩階段，跟過往一樣直接產 key ，才會導致 zkey 不夠大的問題。
+
 ---
 
 ## Circom
