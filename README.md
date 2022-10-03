@@ -150,8 +150,8 @@ powersoftau new               Starts a powers of tau ceremony
 1. The powers of tau, which is independent of the circuit.
     * `$ snarkjs powersoftau new bn128 12 pot12_0000.ptau -v`
     * `$ snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="First contribution" -v`
-    * `$ snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v`
 1. The phase 2, which depends on the circuit.
+    * `$ snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v`
 
 ---
 
@@ -295,7 +295,7 @@ do{
 ```javascript
 const fs = require("fs");
 
-var address = 1028681454274062171917806653030472759697697899756 // put your address here
+var address = "1028681454274062171917806653030472759697697899756" // put your address here
 var ADD = 147;
 var SUB = 148;
 var MUL = 149;
@@ -319,6 +319,9 @@ fs.writeFileSync(
 );
 ```
 
+這邊要特別注意，`js` 的大小和 `circom` 的變數大小是不同的，因此當我們在把地址轉為 `uint160` 放進去之後，記得要使用字串，而不是直接使用整數。
+
+接下來我們把以下 circom program 裡面的 TODO 完成！
 
 ```circom
 template operation(k){
@@ -328,17 +331,12 @@ template operation(k){
     signal output out;
     var temp = (((arr[0] + 3) * 5) -6) * 4; 
     
-    
     /*
     TODO: 
     complete this function, and return the correct result to pass the assert in operation.
     */
 
-    result[0] <-- arr[0];
-    result[1] <-- result[0] + arr[2];
-    result[2] <-- result[1] * arr[4];
-    result[3] <-- result[2] - arr[6];
-    result[4] <-- result[3] * arr[8];
+
     
     /* ----------------------------------------------- */
 
@@ -352,12 +350,28 @@ template operation(k){
 component main = operation(9);
 ```
 
+做法其實有不少種，大家可以自己思考一下！以下是我自己提供的一個解法！
+
+```circom
+result[0] <-- arr[0];
+result[1] <-- result[0] + arr[2];
+result[2] <-- result[1] * arr[4];
+result[3] <-- result[2] - arr[6];
+result[4] <-- result[3] * arr[8];
 ```
+
+在 `Verifier.sol` 中，我部署的合約中 `function verifyProof(bytes memory proof, uint[] memory pubSignals) public view returns (bool)` 裡面有包含著以下檢查程式碼：
+
+```solidity
 address prover = address(uint160(pubSignals[1]));
-address student = 0xB42faBF7BCAE8bc5E368716B568a6f8Fdf3F84ec;
-require(student == prover);
-// require(msg.sender == prover);
+require(msg.sender == prover);
 ```
+
+合約地址：`0x4b67DB7d46A4fde775C0C837E33Ae1eeF2A3fB20`
+
+所以在製作這個題目的 ZKP 時有幾個點需要注意：
+1. `input.json` 必須要包含自己的地址：`uint256(uint160("yout_address")); `
+1. 必須要使用題目提供的 `zkey` 來製作 proof！
 
 ---
 

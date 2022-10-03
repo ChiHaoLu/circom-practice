@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-var address = 1028681454274062171917806653030472759697697899756 // put your address here
+var address = "1028681454274062171917806653030472759697697899756" // put your address here
 var ADD = 147;
 var SUB = 148;
 var MUL = 149;
