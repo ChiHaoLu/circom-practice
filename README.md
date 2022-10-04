@@ -168,7 +168,7 @@ ERROR] snarkJS: Error: T Polynomial is not divisible
     at async clProcessor (/usr/local/lib/node_modules/snarkjs/build/cli.cjs:454:27)
 ```
 
-我看這個 error 好像是 zkey 次數不夠會發生 https://github.com/iden3/snarkjs/blob/master/src/plonk_prove.js#L504，我猜測是因為跳過了這個兩階段，跟過往一樣直接產 key ，才會導致 zkey 不夠大的問題。
+這個 error 好像是 zkey 次數不夠會發生 https://github.com/iden3/snarkjs/blob/master/src/plonk_prove.js#L504，我猜測是因為下載錯了 phase 1，才會導致 zkey 不夠大的問題。
 
 ---
 
